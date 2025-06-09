@@ -4,7 +4,6 @@ SINPE Banking System Flask Application Factory
 
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy  # noqa: F401
 from app.models import db
 import os
 
