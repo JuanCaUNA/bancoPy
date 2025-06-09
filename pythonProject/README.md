@@ -1,19 +1,23 @@
 # SINPE Banking System - Python Implementation
 
-A comprehensive Python-based banking system that replicates the functionality of a TypeScript/Node.js SINPE (Costa Rican payment system) project. The system features a terminal-based interface with Flask API backend.
+A comprehensive Python-based banking system that replicates the functionality of a TypeScript/Node.js SINPE (Costa Rican payment system) project. The system features multiple interfaces: a graphical user interface (GUI), terminal-based interface, and Flask API backend.
 
 ## Features
 
-- **Terminal UI**: Rich terminal interface with colorful menus and interactive forms
-- **REST API**: Complete Flask-based API with all SINPE endpoints
-- **Database**: SQLite database with SQLAlchemy ORM
-- **SINPE Transfers**: Phone-based and account-based transfers with HMAC verification
-- **User Management**: Complete user authentication and account management
-- **Phone Links**: Link phone numbers to bank accounts for SINPE transfers
-- **Transaction History**: Complete transaction tracking and history
-- **Admin Panel**: Database management and statistics
+- **🖥️ Graphical User Interface**: Simple tkinter-based GUI for easy operation
+- **💻 Terminal UI**: Rich terminal interface with colorful menus and interactive forms
+- **🌐 REST API**: Complete Flask-based API with all SINPE endpoints
+- **🗄️ Database**: SQLite database with SQLAlchemy ORM
+- **💸 SINPE Transfers**: Phone-based and account-based transfers with HMAC verification
+- **👥 User Management**: Complete user authentication and account management
+- **📱 Phone Links**: Link phone numbers to bank accounts for SINPE transfers
+- **📊 Transaction History**: Complete transaction tracking and history
+- **⚙️ Admin Panel**: Database management and statistics
+- **🔧 Server Control**: Integrated server management from GUI
 
 ## Quick Start
+
+### Option 1: Graphical User Interface (Recommended)
 
 1. **Install Dependencies**:
    ```bash
@@ -21,7 +25,32 @@ A comprehensive Python-based banking system that replicates the functionality of
    pip install -r requirements.txt
    ```
 
-2. **Run the Application**:
+2. **Run the GUI**:
+   ```bash
+   # Simple GUI (recommended)
+   python simple_gui.py
+   
+   # Full-featured GUI
+   python gui.py
+   
+   # Or use the batch file (Windows)
+   start_gui.bat
+   ```
+
+3. **Using the GUI**:
+   - Click "Iniciar Servidor" to start the backend
+   - Wait for "✓ Servidor en línea" status
+   - Use the tabs to manage users, accounts, and transfers
+
+### Option 2: Terminal Interface
+
+1. **Install Dependencies**:
+   ```bash
+   cd pythonProject
+   pip install -r requirements.txt
+   ```
+
+2. **Run the Terminal Application**:
    ```bash
    python main.py
    ```
