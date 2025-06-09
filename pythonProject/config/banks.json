@@ -1,47 +1,83 @@
 {
   "152": {
-    "name": "Local Bank",
-    "url": "http://192.168.1.10:3001",
-    "code": "0152"
+    "name": "Banco Python Principal",
+    "url": "http://localhost:5000",
+    "code": "0152",
+    "ssh_host": "localhost",
+    "ssh_port": 22,
+    "enabled": true,
+    "description": "Banco local Python"
   },
   "876": {
     "name": "Banco Josue",
     "url": "http://192.168.3.10:5000",
-    "code": "0876"
+    "code": "0876",
+    "ssh_host": "192.168.3.10",
+    "ssh_port": 22,
+    "enabled": true,
+    "description": "Banco Python secundario"
   },
   "119": {
-    "name": "Banco Marconi",
+    "name": "Banco TypeScript",
     "url": "http://192.168.2.10:3001",
-    "code": "0119"
+    "code": "0119",
+    "ssh_host": "192.168.2.10",
+    "ssh_port": 22,
+    "enabled": true,
+    "description": "Banco TypeScript con Prisma"
   },
   "241": {
     "name": "Banco Brayan",
     "url": "http://192.168.4.10:5050",
-    "code": "0241"
+    "code": "0241",
+    "ssh_host": "192.168.4.10",
+    "ssh_port": 22,
+    "enabled": true,
+    "description": "Banco remoto"
   },
   "223": {
     "name": "Banco Kendall",
     "url": "http://192.168.5.10:3001",
-    "code": "0223"
+    "code": "0223",
+    "ssh_host": "192.168.5.10",
+    "ssh_port": 22,
+    "enabled": true,
+    "description": "Banco remoto secundario"
   },
   "150": {
     "name": "Banco Marco",
-    "url": "",
-    "code": "0150"
+    "url": "http://192.168.6.10:5000",
+    "code": "0150",
+    "ssh_host": "192.168.6.10",
+    "ssh_port": 22,
+    "enabled": false,
+    "description": "Banco en desarrollo"
   },
   "111": {
     "name": "Banco Chuma",
-    "url": "",
-    "code": "0111"
+    "url": "http://192.168.7.10:5000",
+    "code": "0111",
+    "ssh_host": "192.168.7.10",
+    "ssh_port": 22,
+    "enabled": false,
+    "description": "Banco en desarrollo"
   },
   "777": {
     "name": "Banco Greichel",
-    "url": "",
-    "code": "0777"
+    "url": "http://192.168.8.10:5000",
+    "code": "0777",
+    "ssh_host": "192.168.8.10",
+    "ssh_port": 22,
+    "enabled": false,
+    "description": "Banco en desarrollo"
   },
   "333": {
     "name": "Banco Jordan",
-    "url": "",
-    "code": "0333"
+    "url": "http://192.168.9.10:5000",
+    "code": "0333",
+    "ssh_host": "192.168.9.10",
+    "ssh_port": 22,
+    "enabled": false,
+    "description": "Banco en desarrollo"
   }
 }
