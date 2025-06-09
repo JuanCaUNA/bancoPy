@@ -6,7 +6,6 @@ from flask import Blueprint, request, jsonify
 from app.services.sinpe_service import SinpeService
 from app.services.bank_connector_service import BankConnectorService
 from app.utils.hmac_generator import verify_hmac, generar_hmac
-from app.models import db, Transaction
 from datetime import datetime
 import uuid
 
@@ -36,37 +35,13 @@ def check_user_sinpe_link(username):
             'account': result['account']
         })
         
-    except Exception as e:
+    except Exception:
         return jsonify({'error': 'Error del servidor'}), 500
 
 @sinpe_bp.route('/sinpe-movil', methods=['POST'])
 def handle_sinpe_transfer():
     """
     Handle SINPE mobile transfer requests
-    
-    Expected payload:
-    {
-        "version": "string",
-        "timestamp": "string",
-        "transaction_id": "string",
-        "sender": {
-            "phone": "string",
-            "bank_code": "string",
-            "name": "string"
-        },
-        "receiver": {
-            "account_number": "string",
-            "phone": "string",
-            "bank_code": "string",
-            "name": "string"
-        },
-        "amount": {
-            "value": float,
-            "currency": "string"
-        },
-        "description": "string",
-        "hmac_md5": "string"
-    }
     """
     try:
         data = request.get_json()
@@ -148,7 +123,7 @@ def validate_phone(phone):
             'phone': subscription.sinpe_number
         })
         
-    except Exception as e:
+    except Exception:
         return jsonify({'error': 'Error interno del servidor'}), 500
 
 @sinpe_bp.route('/sinpe/accounts/<username>', methods=['GET'])
@@ -245,7 +220,7 @@ def receive_sinpe_transfer():
             return jsonify({'error': result['error']}), 400
             
     except Exception as e:
-        return jsonify({'error': f'Error interno del servidor: {str(e)}')}), 500
+        return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
 
 @sinpe_bp.route('/api/sinpe-movil-transfer', methods=['POST'])
 def receive_sinpe_movil_transfer():
@@ -311,7 +286,7 @@ def receive_sinpe_movil_transfer():
             return jsonify({'error': result['error']}), 400
             
     except Exception as e:
-        return jsonify({'error': f'Error interno del servidor: {str(e)}')}), 500
+        return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
 
 @sinpe_bp.route('/api/send-external-transfer', methods=['POST'])
 def send_external_transfer():
@@ -371,7 +346,7 @@ def send_external_transfer():
         return jsonify(result), 200 if result['success'] else 400
         
     except Exception as e:
-        return jsonify({'error': f'Error interno del servidor: {str(e)}')}), 500
+        return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
 
 @sinpe_bp.route('/api/send-external-movil-transfer', methods=['POST'])
 def send_external_movil_transfer():
@@ -427,7 +402,7 @@ def send_external_movil_transfer():
         return jsonify(result), 200 if result['success'] else 400
         
     except Exception as e:
-        return jsonify({'error': f'Error interno del servidor: {str(e)}')}), 500
+        return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
 
 @sinpe_bp.route('/api/bank-contacts', methods=['GET'])
 def get_bank_contacts():
@@ -441,4 +416,4 @@ def get_bank_contacts():
             'data': contacts
         })
     except Exception as e:
-        return jsonify({'error': f'Error interno del servidor: {str(e)}')}), 500
+        return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
