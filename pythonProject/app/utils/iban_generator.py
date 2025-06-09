@@ -1,41 +1,73 @@
 """
 IBAN Generation Utilities for SINPE Banking System
+Based on Costa Rican IBAN structure: CR21-0XXX-0001-XX-XXXX-XXXX-XX
 """
 
 import random
 import string
+import json
+import os
 
-def generate_iban(bank_code: str = "152", country_code: str = "CR") -> str:
+def load_iban_structure():
+    """Load IBAN structure from JSON file"""
+    try:
+        structure_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'IBAN-estructure.json')
+        with open(structure_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        # Fallback structure
+        return {
+            "codigo_pais": "CR21",
+            "banco": "0XXX",
+            "sucursal": "0001",
+            "codigo_control": "XX",
+            "numero_cuenta": "XXXX-XXXX-XX"
+        }
+
+def generate_iban(bank_code: str = "152", country_code: str = "CR", branch_code: str = "0001") -> str:
     """
-    Generate a Costa Rican IBAN for the banking system
+    Generate a Costa Rican IBAN following the official structure
+    Format: CR21-0XXX-0001-XX-XXXX-XXXX-XX
     
     Args:
-        bank_code: Bank code (default "152" for local bank)
-        country_code: Country code (default "CR" for Costa Rica)
+        bank_code: Bank code (3 digits, will be padded to 0XXX format)
+        country_code: Country code (default "CR" for Costa Rica)  
+        branch_code: Branch code (default "0001")
         
     Returns:
-        Generated IBAN string
+        Generated IBAN string with dashes
     """
-    # Generate random account number (12 digits)
-    account_number = ''.join(random.choices(string.digits, k=12))
+    # Ensure bank code is 3 digits
+    if len(bank_code) < 3:
+        bank_code = bank_code.zfill(3)
+    elif len(bank_code) > 3:
+        bank_code = bank_code[:3]
     
-    # Calculate check digits (simplified - in real IBAN this is more complex)
-    check_digits = str(random.randint(10, 99))
+    # Generate control digits
+    control_digits = str(random.randint(10, 99))
     
-    # Format: CR + check_digits + bank_code + account_number
-    iban = f"{country_code}{check_digits}{bank_code}{account_number}"
+    # Generate account number parts
+    part1 = ''.join(random.choices(string.digits, k=4))
+    part2 = ''.join(random.choices(string.digits, k=4)) 
+    part3 = str(random.randint(10, 99))
+    
+    # Format: CR21-0XXX-0001-XX-XXXX-XXXX-XX
+    iban = f"{country_code}21-0{bank_code}-{branch_code}-{control_digits}-{part1}-{part2}-{part3}"
     
     return iban
 
-def generate_account_number() -> str:
+def generate_account_number_cr_format() -> str:
     """
-    Generate a unique account number
+    Generate account number following CR format: XXXX-XXXX-XX
     
     Returns:
-        Account number string
+        Account number string with dashes
     """
-    # Generate 15-digit account number
-    return ''.join(random.choices(string.digits, k=15))
+    part1 = ''.join(random.choices(string.digits, k=4))
+    part2 = ''.join(random.choices(string.digits, k=4))
+    part3 = str(random.randint(10, 99))
+    
+    return f"{part1}-{part2}-{part3}"
 
 def validate_iban_format(iban: str) -> bool:
     """

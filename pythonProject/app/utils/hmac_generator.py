@@ -7,7 +7,7 @@ import hmac
 
 SECRET_KEY = "supersecreta123"
 
-def generate_hmac_for_account_transfer(account_number: str, timestamp: str, transaction_id: str, amount: float) -> str:
+def generate_hmac_for_account_transfer(account_number: str, timestamp: str, transaction_id: str, amount: float, clave: str = SECRET_KEY) -> str:
     """
     Generate HMAC MD5 for account-to-account transfers
     
@@ -16,14 +16,16 @@ def generate_hmac_for_account_transfer(account_number: str, timestamp: str, tran
         timestamp: ISO 8601 timestamp
         transaction_id: UUID of transaction
         amount: Transfer amount
+        clave: Secret key for HMAC generation
         
     Returns:
         HMAC in hexadecimal format
     """
-    message = f"{SECRET_KEY},{account_number},{timestamp},{transaction_id},{amount}"
-    return hashlib.md5(message.encode()).hexdigest()
+    amount_str = "{:.2f}".format(float(amount))
+    mensaje = account_number + timestamp + transaction_id + amount_str
+    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
 
-def generate_hmac_for_phone_transfer(phone_number: str, timestamp: str, transaction_id: str, amount: float) -> str:
+def generate_hmac_for_phone_transfer(phone_number: str, timestamp: str, transaction_id: str, amount: float, clave: str = SECRET_KEY) -> str:
     """
     Generate HMAC MD5 for SINPE mobile transfers (phone-based)
     
@@ -32,20 +34,41 @@ def generate_hmac_for_phone_transfer(phone_number: str, timestamp: str, transact
         timestamp: ISO 8601 timestamp
         transaction_id: UUID of transaction
         amount: Transfer amount
+        clave: Secret key for HMAC generation
         
     Returns:
         HMAC in hexadecimal format
     """
-    message = f"{SECRET_KEY},{phone_number},{timestamp},{transaction_id},{amount}"
-    return hashlib.md5(message.encode()).hexdigest()
+    amount_str = "{:.2f}".format(float(amount))
+    mensaje = phone_number + timestamp + transaction_id + amount_str
+    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
 
-def verify_hmac(payload: dict, provided_hmac: str) -> bool:
+def generar_hmac(account_number: str, timestamp: str, transaction_id: str, amount: float, clave: str = SECRET_KEY) -> str:
+    """
+    Función compatible con code.py - Generate HMAC for validation
+    
+    Args:
+        account_number: Account number
+        timestamp: Transaction timestamp
+        transaction_id: Transaction ID
+        amount: Amount value
+        clave: Secret key
+        
+    Returns:
+        HMAC in hexadecimal format
+    """
+    amount_str = "{:.2f}".format(float(amount))
+    mensaje = account_number + timestamp + transaction_id + amount_str
+    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
+
+def verify_hmac(payload: dict, provided_hmac: str, clave: str = SECRET_KEY) -> bool:
     """
     Verify HMAC signature for incoming transfer requests
     
     Args:
         payload: Transfer payload containing all fields
         provided_hmac: HMAC provided in request
+        clave: Secret key for verification
         
     Returns:
         True if HMAC is valid, False otherwise
@@ -54,21 +77,23 @@ def verify_hmac(payload: dict, provided_hmac: str) -> bool:
         # Determine if this is a phone or account transfer
         sender = payload.get('sender', {})
         
-        if sender.get('phone'):
-            # Phone-based transfer
+        if sender.get('phone_number'):
+            # Phone-based transfer (SINPE Móvil)
             calculated_hmac = generate_hmac_for_phone_transfer(
-                sender['phone'],
+                sender['phone_number'],
                 payload['timestamp'],
                 payload['transaction_id'],
-                payload['amount']['value']
+                payload['amount']['value'],
+                clave
             )
         elif sender.get('account_number'):
-            # Account-based transfer
+            # Account-based transfer (SINPE)
             calculated_hmac = generate_hmac_for_account_transfer(
                 sender['account_number'],
                 payload['timestamp'],
                 payload['transaction_id'],
-                payload['amount']['value']
+                payload['amount']['value'],
+                clave
             )
         else:
             return False

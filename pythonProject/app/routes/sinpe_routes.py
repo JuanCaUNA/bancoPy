@@ -4,9 +4,14 @@ SINPE Routes - API endpoints for SINPE functionality
 
 from flask import Blueprint, request, jsonify
 from app.services.sinpe_service import SinpeService
-from app.utils.hmac_generator import verify_hmac
+from app.services.bank_connector_service import BankConnectorService
+from app.utils.hmac_generator import verify_hmac, generar_hmac
+from app.models import db, Transaction
+from datetime import datetime
+import uuid
 
 sinpe_bp = Blueprint('sinpe', __name__)
+bank_connector = BankConnectorService()
 
 @sinpe_bp.route('/sinpe/user-link/<username>', methods=['GET'])
 def check_user_sinpe_link(username):
