@@ -11,6 +11,7 @@
 The SINPE Banking System has been successfully integrated with Costa Rican IBAN structure and inter-bank communication capabilities. All core components are functional and ready for deployment.
 
 ### Key Achievements
+
 - ✅ **Complete Costa Rican IBAN Implementation** - Fully compatible with CR21 format
 - ✅ **Inter-Bank Communication** - HTTP-based transfers using IP addresses  
 - ✅ **HMAC Security** - MD5-based message authentication
@@ -25,6 +26,7 @@ The SINPE Banking System has been successfully integrated with Costa Rican IBAN 
 ### System Components
 
 #### 1. **Core Services**
+
 ```python
 app/services/
 ├── sinpe_service.py              # Business logic for SINPE transfers
@@ -33,6 +35,7 @@ app/services/
 ```
 
 #### 2. **Utility Modules**
+
 ```python
 app/utils/
 ├── hmac_generator.py             # HMAC generation and verification
@@ -40,12 +43,14 @@ app/utils/
 ```
 
 #### 3. **API Routes**
+
 ```python
 app/routes/
 └── sinpe_routes.py               # 5 API endpoints for SINPE operations
 ```
 
 #### 4. **Data Models**
+
 ```python
 app/models/
 └── __init__.py                   # Enhanced Transaction model
@@ -56,6 +61,7 @@ app/models/
 ## 🌐 Inter-Bank Network
 
 ### Active Bank Network (5 Banks)
+
 | Bank      | IP Address           | Code | IBAN Example                    |
 |-----------|---------------------|------|---------------------------------|
 | josue     | 192.168.3.10:5000  | 876  | CR21-0876-0001-00-0000-0121-87 |
@@ -65,6 +71,7 @@ app/models/
 | kendall   | 192.168.5.10:3001  | 223  | CR21-0223-0001-53-8683-6961-36 |
 
 ### Inactive Banks (Configuration Ready)
+
 - marco (Code: 150), chuma (Code: 111), greichel (Code: 777), jordan (Code: 333)
 
 ---
@@ -72,6 +79,7 @@ app/models/
 ## 🔌 API Endpoints
 
 ### 1. **Receive SINPE Transfer**
+
 ```http
 POST /api/sinpe-transfer
 Content-Type: application/json
@@ -100,6 +108,7 @@ Content-Type: application/json
 ```
 
 ### 2. **Receive SINPE Móvil Transfer**
+
 ```http
 POST /api/sinpe-movil-transfer
 Content-Type: application/json
@@ -124,6 +133,7 @@ Content-Type: application/json
 ```
 
 ### 3. **Send External SINPE Transfer**
+
 ```http
 POST /api/send-external-transfer
 Content-Type: application/json
@@ -140,6 +150,7 @@ Content-Type: application/json
 ```
 
 ### 4. **Send External SINPE Móvil Transfer**
+
 ```http
 POST /api/send-external-movil-transfer
 Content-Type: application/json
@@ -154,6 +165,7 @@ Content-Type: application/json
 ```
 
 ### 5. **Get Bank Contacts**
+
 ```http
 GET /api/bank-contacts
 
@@ -176,6 +188,7 @@ Response:
 ## 🔐 Security Implementation
 
 ### HMAC Generation
+
 ```python
 def generar_hmac(account_number, timestamp, transaction_id, amount):
     secret_key = "mi_clave_secreta_hmac"
@@ -185,6 +198,7 @@ def generar_hmac(account_number, timestamp, transaction_id, amount):
 ```
 
 ### Security Features
+
 - **Message Authentication:** MD5-based HMAC validation
 - **Payload Integrity:** Complete payload verification
 - **Secret Key Management:** Configurable HMAC secrets
@@ -195,7 +209,8 @@ def generar_hmac(account_number, timestamp, transaction_id, amount):
 ## 🆔 Costa Rican IBAN Structure
 
 ### Format Implementation
-```
+
+```txt
 CR21-0XXX-0001-XX-XXXX-XXXX-XX
 ├── CR21: Country identifier
 ├── 0XXX: Bank code (4 digits, leading zero)
@@ -205,6 +220,7 @@ CR21-0XXX-0001-XX-XXXX-XXXX-XX
 ```
 
 ### Generation Example
+
 ```python
 def generate_costa_rican_iban(bank_code, account_number):
     return f"CR21-0{bank_code}-0001-XX-{account_number[:4]}-{account_number[4:8]}-{account_number[8:10]}"
@@ -215,6 +231,7 @@ def generate_costa_rican_iban(bank_code, account_number):
 ## 💾 Database Schema Updates
 
 ### Enhanced Transaction Model
+
 ```python
 class Transaction(db.Model):
     # Existing fields...
@@ -234,6 +251,7 @@ class Transaction(db.Model):
 ### Test Suite Coverage: 100% ✅
 
 #### Basic Tests (5/5 passed)
+
 - ✅ Data file loading and validation
 - ✅ IBAN structure verification  
 - ✅ Bank contacts validation
@@ -241,6 +259,7 @@ class Transaction(db.Model):
 - ✅ Payload structure validation
 
 #### Integration Tests (6/6 passed)
+
 - ✅ SINPE transfer payload creation
 - ✅ SINPE Móvil transfer payload creation
 - ✅ Bank communication simulation
@@ -253,6 +272,7 @@ class Transaction(db.Model):
 ## 🚀 Deployment Instructions
 
 ### Prerequisites
+
 ```bash
 # Install Python dependencies
 pip install -r requirements.txt
@@ -262,6 +282,7 @@ python --version
 ```
 
 ### Database Setup
+
 ```python
 # Initialize database tables
 from app import create_app
@@ -273,6 +294,7 @@ with app.app_context():
 ```
 
 ### Application Startup
+
 ```bash
 # Start the Flask application
 python main.py
@@ -282,6 +304,7 @@ python main.py
 ```
 
 ### Configuration Files
+
 - `contactos-bancos.json` - Bank contact information
 - `IBAN-estructure.json` - Costa Rican IBAN structure
 - `config/banks.json` - Bank configuration
@@ -292,12 +315,14 @@ python main.py
 ## 📊 Performance Considerations
 
 ### Scalability Features
+
 - **Connection Pooling:** HTTP connection reuse for bank communications
 - **Async Processing:** Background transfer processing capabilities
 - **Caching:** Bank contact information caching
 - **Rate Limiting:** API request rate limiting support
 
 ### Security Enhancements
+
 - **HTTPS Support:** Ready for encrypted communication
 - **Input Validation:** Comprehensive payload validation
 - **Audit Logging:** Transaction audit trail capabilities
@@ -308,18 +333,21 @@ python main.py
 ## 🔄 Next Steps
 
 ### Phase 1: Production Deployment
+
 1. **Environment Setup:** Configure production environment
 2. **SSL Certificates:** Install HTTPS certificates
 3. **Database Migration:** Deploy enhanced Transaction model
 4. **Monitoring Setup:** Configure application monitoring
 
 ### Phase 2: Live Testing
+
 1. **Bank Connectivity:** Test with partner bank systems
 2. **HMAC Validation:** Verify security with real banks
 3. **Load Testing:** Performance testing under load
 4. **Security Audit:** Complete security review
 
 ### Phase 3: Full Operation
+
 1. **Go-Live:** Full production deployment
 2. **Monitoring:** Real-time system monitoring
 3. **Support:** 24/7 operational support
@@ -330,11 +358,13 @@ python main.py
 ## 📞 Support Information
 
 ### Technical Contacts
+
 - **Integration Team:** Available for technical support
 - **Documentation:** Complete API documentation available
 - **Error Logs:** Comprehensive logging for troubleshooting
 
 ### Maintenance Schedule
+
 - **Regular Updates:** Monthly security updates
 - **Performance Reviews:** Quarterly performance analysis
 - **Feature Enhancements:** Continuous improvement process
