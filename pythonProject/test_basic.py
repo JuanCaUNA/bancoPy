@@ -19,17 +19,29 @@ def test_data_files():
         'config/banks.json'
     ]
     
+    all_passed = True
+    
     for file_path in files_to_test:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                print(f"✓ {file_path} loaded: {len(data) if isinstance(data, list) else 'OK'}")
+                if isinstance(data, list):
+                    print(f"✓ {file_path} loaded: {len(data)} items")
+                elif isinstance(data, dict):
+                    print(f"✓ {file_path} loaded: {len(data)} keys")
+                else:
+                    print(f"✓ {file_path} loaded: OK")
         except FileNotFoundError:
             print(f"✗ {file_path} not found")
+            all_passed = False
         except json.JSONDecodeError:
             print(f"✗ {file_path} invalid JSON")
+            all_passed = False
         except Exception as e:
             print(f"✗ {file_path} error: {str(e)}")
+            all_passed = False
+    
+    return all_passed
 
 def test_iban_structure():
     """Test IBAN structure from JSON file"""
