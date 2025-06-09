@@ -358,9 +358,9 @@ def send_external_transfer():
             timestamp,
             transaction_id,
             data['amount']
-        )
-        transfer_payload['hmac_md5'] = hmac_value
-          # Send to target bank
+        )        transfer_payload['hmac_md5'] = hmac_value
+        
+        # Send to target bank
         result = bank_connector.send_sinpe_transfer_to_bank(
             data['receiver_iban'],
             transfer_payload
@@ -413,9 +413,9 @@ def send_external_movil_transfer():
             timestamp,
             transaction_id,
             data['amount']
-        )
-        transfer_payload['hmac_md5'] = hmac_value
-          # Send to target bank
+        )        transfer_payload['hmac_md5'] = hmac_value
+        
+        # Send to target bank
         result = bank_connector.send_sinpe_movil_transfer_to_bank(
             data['receiver_phone'],
             transfer_payload
@@ -430,7 +430,8 @@ def send_external_movil_transfer():
 def get_bank_contacts():
     """
     Get all available bank contacts with their IP addresses
-    """    try:
+    """
+    try:
         contacts = bank_connector.get_all_bank_contacts()
         return jsonify({
             'success': True,

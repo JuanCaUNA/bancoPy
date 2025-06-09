@@ -59,7 +59,7 @@ class BankConnectorService:
             clean_iban = iban.replace('-', '')
             if len(clean_iban) >= 8:
                 return clean_iban[4:8]  # Extract bank code
-        except:
+        except Exception:
             return None
         return None
     
