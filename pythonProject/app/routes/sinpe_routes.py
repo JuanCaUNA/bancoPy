@@ -6,7 +6,6 @@ from flask import Blueprint, request, jsonify
 from app.services.sinpe_service import SinpeService
 from app.services.bank_connector_service import BankConnectorService
 from app.utils.hmac_generator import verify_hmac, generar_hmac
-from app.models import db, Transaction
 from datetime import datetime
 import uuid
 
@@ -361,13 +360,13 @@ def send_external_transfer():
             data['amount']
         )
         transfer_payload['hmac_md5'] = hmac_value
-        
-        # Send to target bank
+          # Send to target bank
         result = bank_connector.send_sinpe_transfer_to_bank(
             data['receiver_iban'],
             transfer_payload
         )
-          return jsonify(result), 200 if result['success'] else 400
+        
+        return jsonify(result), 200 if result['success'] else 400
         
     except Exception as e:
         return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
@@ -416,13 +415,13 @@ def send_external_movil_transfer():
             data['amount']
         )
         transfer_payload['hmac_md5'] = hmac_value
-        
-        # Send to target bank
+          # Send to target bank
         result = bank_connector.send_sinpe_movil_transfer_to_bank(
             data['receiver_phone'],
             transfer_payload
         )
-          return jsonify(result), 200 if result['success'] else 400
+        
+        return jsonify(result), 200 if result['success'] else 400
         
     except Exception as e:
         return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500
@@ -431,11 +430,11 @@ def send_external_movil_transfer():
 def get_bank_contacts():
     """
     Get all available bank contacts with their IP addresses
-    """
-    try:
+    """    try:
         contacts = bank_connector.get_all_bank_contacts()
         return jsonify({
             'success': True,
-            'data': contacts        })
+            'data': contacts
+        })
     except Exception as e:
         return jsonify({'error': f'Error interno del servidor: {str(e)}'}), 500

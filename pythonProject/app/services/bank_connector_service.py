@@ -224,15 +224,14 @@ class BankConnectorService:
         # Check country code
         if not clean_iban.startswith('CR'):
             return False
-            
-        # Check that we have digits in appropriate positions
+              # Check that we have digits in appropriate positions
         try:
             # Check digits (positions 2-3)
             int(clean_iban[2:4])
             # Bank code (positions 4-7)
             int(clean_iban[4:8])
             return True
-        except ValueError:
+        except (ValueError, IndexError):
             return False
     
     def get_all_bank_contacts(self) -> List[Dict]:
