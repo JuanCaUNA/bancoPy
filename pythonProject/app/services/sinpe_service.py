@@ -2,10 +2,10 @@
 SINPE Service - Core business logic for SINPE transfers
 """
 
-from app.models import db, User, Account, UserAccount, PhoneLink, SinpeSubscription, Transaction
+from app.models import db, User, Account, PhoneLink, SinpeSubscription, Transaction # , UserAccount
 from decimal import Decimal
 import uuid
-from datetime import datetime
+# from datetime import datetime
 
 class SinpeService:
     
@@ -194,7 +194,7 @@ class SinpeService:
             # Try to find by IBAN first
             if receiver_account.startswith('CR') and '-' in receiver_account:
                 # Extract account number from IBAN
-                clean_iban = receiver_account.replace('-', '')
+                clean_iban = receiver_account.replace('-', '') # Local variable `clean_iban` is assigned to but never used
                 # For now, try to match with existing accounts
                 # In a real implementation, we'd have proper IBAN to account mapping
                 potential_accounts = Account.query.all()

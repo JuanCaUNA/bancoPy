@@ -351,14 +351,14 @@ def send_external_transfer():
             },
             "description": data['description']
         }
-        
-        # Generate HMAC
+          # Generate HMAC
         hmac_value = generar_hmac(
             data['sender_account'],
             timestamp,
             transaction_id,
             data['amount']
-        )        transfer_payload['hmac_md5'] = hmac_value
+        )
+        transfer_payload['hmac_md5'] = hmac_value
         
         # Send to target bank
         result = bank_connector.send_sinpe_transfer_to_bank(
@@ -406,14 +406,14 @@ def send_external_movil_transfer():
             },
             "description": data['description']
         }
-        
-        # Generate HMAC
+          # Generate HMAC
         hmac_value = generar_hmac(
             data['sender_phone'],
             timestamp,
             transaction_id,
             data['amount']
-        )        transfer_payload['hmac_md5'] = hmac_value
+        )
+        transfer_payload['hmac_md5'] = hmac_value
         
         # Send to target bank
         result = bank_connector.send_sinpe_movil_transfer_to_bank(
