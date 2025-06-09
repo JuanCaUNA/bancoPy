@@ -162,3 +162,161 @@ class SinpeService:
             accounts_info.append(account_info)
             
         return accounts_info
+
+    @staticmethod
+    def process_incoming_sinpe_transfer(sender_account, sender_bank, sender_name, 
+                                      receiver_account, receiver_bank, receiver_name,
+                                      amount, currency, description, transaction_id, timestamp):
+        """
+        Process incoming SINPE transfer from another bank
+        
+        Args:
+            sender_account: Sender's account number
+            sender_bank: Sender's bank code
+            sender_name: Sender's name
+            receiver_account: Receiver's account number (IBAN)
+            receiver_bank: Receiver's bank code
+            receiver_name: Receiver's name
+            amount: Transfer amount
+            currency: Currency code
+            description: Transfer description
+            transaction_id: Transaction ID
+            timestamp: Transaction timestamp
+            
+        Returns:
+            Dict with success status and details
+        """
+        try:
+            # Find the receiver account in our system
+            # The receiver_account might be an IBAN, so we need to extract the account number
+            # For CR IBAN format: CR21-0XXX-0001-XX-XXXX-XXXX-XX
+            # We need to find the account by the IBAN or account number
+            
+            # First, try to find the account directly
+            from app.models import Account
+            account = Account.query.filter_by(number=receiver_account).first()
+            
+            if not account:
+                # If not found, try to parse IBAN and find by account parts
+                # This is simplified - in reality you'd need more sophisticated IBAN parsing
+                clean_iban = receiver_account.replace('-', '')
+                if len(clean_iban) > 15:
+                    # Extract potential account number from IBAN
+                    account_part = clean_iban[-10:]  # Last 10 digits
+                    account = Account.query.filter(Account.number.like(f'%{account_part}%')).first()
+            
+            if not account:
+                return {
+                    'success': False,
+                    'error': 'Cuenta destino no encontrada en nuestro sistema'
+                }
+            
+            # Create transaction record
+            from app.models import Transaction
+            transaction = Transaction(
+                id=transaction_id,
+                sender_account=sender_account,
+                receiver_account=account.number,
+                amount=Decimal(str(amount)),
+                currency=currency,
+                description=description,
+                status='completed',
+                transaction_type='sinpe_transfer',
+                timestamp=datetime.fromisoformat(timestamp.replace('Z', '+00:00')) if 'Z' in timestamp else datetime.fromisoformat(timestamp)
+            )
+            
+            # Update account balance
+            account.balance += Decimal(str(amount))
+            
+            # Save to database
+            db.session.add(transaction)
+            db.session.commit()
+            
+            return {
+                'success': True,
+                'transaction_id': transaction_id,
+                'receiver_account': account.number,
+                'amount': amount,
+                'new_balance': float(account.balance)
+            }
+            
+        except Exception as e:
+            db.session.rollback()
+            return {
+                'success': False,
+                'error': f'Error procesando transferencia: {str(e)}'
+            }
+    
+    @staticmethod
+    def process_incoming_sinpe_movil_transfer(sender_phone, receiver_phone, amount, 
+                                            currency, description, transaction_id, timestamp):
+        """
+        Process incoming SINPE Móvil transfer from another bank
+        
+        Args:
+            sender_phone: Sender's phone number
+            receiver_phone: Receiver's phone number
+            amount: Transfer amount
+            currency: Currency code
+            description: Transfer description
+            transaction_id: Transaction ID
+            timestamp: Transaction timestamp
+            
+        Returns:
+            Dict with success status and details
+        """
+        try:
+            # Find the receiver's account by phone number
+            from app.models import PhoneLink, Account
+            phone_link = PhoneLink.query.filter_by(phone=receiver_phone).first()
+            
+            if not phone_link:
+                return {
+                    'success': False,
+                    'error': 'Número de teléfono no está registrado en nuestro sistema'
+                }
+            
+            account = Account.query.filter_by(number=phone_link.account_number).first()
+            
+            if not account:
+                return {
+                    'success': False,
+                    'error': 'Cuenta asociada al teléfono no encontrada'
+                }
+            
+            # Create transaction record
+            from app.models import Transaction
+            transaction = Transaction(
+                id=transaction_id,
+                sender_account=sender_phone,  # For SINPE Móvil, we use phone as identifier
+                receiver_account=account.number,
+                amount=Decimal(str(amount)),
+                currency=currency,
+                description=description,
+                status='completed',
+                transaction_type='sinpe_movil_transfer',
+                timestamp=datetime.fromisoformat(timestamp.replace('Z', '+00:00')) if 'Z' in timestamp else datetime.fromisoformat(timestamp)
+            )
+            
+            # Update account balance
+            account.balance += Decimal(str(amount))
+            
+            # Save to database
+            db.session.add(transaction)
+            db.session.commit()
+            
+            return {
+                'success': True,
+                'transaction_id': transaction_id,
+                'receiver_phone': receiver_phone,
+                'receiver_account': account.number,
+                'amount': amount,
+                'new_balance': float(account.balance)
+            }
+            
+        except Exception as e:
+            db.session.rollback()
+            return {
+                'success': False,
+                'error': f'Error procesando transferencia SINPE Móvil: {str(e)}'
+            }
