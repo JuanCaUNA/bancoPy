@@ -1,22 +1,47 @@
 {
   "152": {
     "name": "Local Bank",
-    "url": "http://192.168.1.10:3001"
+    "url": "http://192.168.1.10:3001",
+    "code": "0152"
   },
-  "151": {
-    "name": "Banco Nacional",
-    "url": "http://192.168.1.20:3001"
+  "876": {
+    "name": "Banco Josue",
+    "url": "http://192.168.3.10:5000",
+    "code": "0876"
   },
-  "153": {
-    "name": "Banco Popular",
-    "url": "http://192.168.1.30:3001"
+  "119": {
+    "name": "Banco Marconi",
+    "url": "http://192.168.2.10:3001",
+    "code": "0119"
   },
-  "CB": {
-    "name": "Banco Central",
-    "url": "http://192.168.2.10:3001"
+  "241": {
+    "name": "Banco Brayan",
+    "url": "http://192.168.4.10:5050",
+    "code": "0241"
   },
-  "CR": {
-    "name": "Banco de Costa Rica",
-    "url": "http://192.168.1.30:3001"
+  "223": {
+    "name": "Banco Kendall",
+    "url": "http://192.168.5.10:3001",
+    "code": "0223"
+  },
+  "150": {
+    "name": "Banco Marco",
+    "url": "",
+    "code": "0150"
+  },
+  "111": {
+    "name": "Banco Chuma",
+    "url": "",
+    "code": "0111"
+  },
+  "777": {
+    "name": "Banco Greichel",
+    "url": "",
+    "code": "0777"
+  },
+  "333": {
+    "name": "Banco Jordan",
+    "url": "",
+    "code": "0333"
   }
 }

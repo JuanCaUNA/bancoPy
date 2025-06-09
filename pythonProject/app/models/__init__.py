@@ -113,6 +113,10 @@ class Transaction(db.Model):
     description = db.Column(db.String(255))
     sender_phone = db.Column(db.String(15))
     receiver_phone = db.Column(db.String(15))
+    sender_info = db.Column(db.String(255))  # For external transfers
+    receiver_info = db.Column(db.String(255))  # For external transfers
+    external_bank_code = db.Column(db.String(10))  # Bank code for external transfers
+    transaction_type = db.Column(db.String(30), default='internal')  # internal, sinpe_incoming, sinpe_outgoing, etc.
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
@@ -131,6 +135,10 @@ class Transaction(db.Model):
             'description': self.description,
             'sender_phone': self.sender_phone,
             'receiver_phone': self.receiver_phone,
+            'sender_info': self.sender_info,
+            'receiver_info': self.receiver_info,
+            'external_bank_code': self.external_bank_code,
+            'transaction_type': self.transaction_type,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
