@@ -1,9 +1,9 @@
 """
 HMAC Generation Utilities for SINPE Banking System
+FORMATO CORREGIDO: Compatible con ecosistema inter-banco usando comas como separadores
 """
 
 import hashlib
-import hmac
 
 SECRET_KEY = "supersecreta123"
 
@@ -17,6 +17,7 @@ def generate_hmac_for_account_transfer(
 ) -> str:
     """
     Generate HMAC MD5 for account-to-account transfers
+    FORMATO CORREGIDO: Con comas como separadores para compatibilidad inter-banco
 
     Args:
         account_number: Account number of sender
@@ -29,8 +30,9 @@ def generate_hmac_for_account_transfer(
         HMAC in hexadecimal format
     """
     amount_str = "{:.2f}".format(float(amount))
-    mensaje = account_number + timestamp + transaction_id + amount_str
-    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
+    # CAMBIO CRÍTICO: Usar formato con comas como esperan otros bancos
+    mensaje = f"{clave},{account_number},{timestamp},{transaction_id},{amount_str}"
+    return hashlib.md5(mensaje.encode()).hexdigest()
 
 
 def generate_hmac_for_phone_transfer(
@@ -42,6 +44,7 @@ def generate_hmac_for_phone_transfer(
 ) -> str:
     """
     Generate HMAC MD5 for SINPE mobile transfers (phone-based)
+    FORMATO CORREGIDO: Con comas como separadores para compatibilidad inter-banco
 
     Args:
         phone_number: Phone number of recipient
@@ -54,8 +57,9 @@ def generate_hmac_for_phone_transfer(
         HMAC in hexadecimal format
     """
     amount_str = "{:.2f}".format(float(amount))
-    mensaje = phone_number + timestamp + transaction_id + amount_str
-    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
+    # CAMBIO CRÍTICO: Usar formato con comas como esperan otros bancos
+    mensaje = f"{clave},{phone_number},{timestamp},{transaction_id},{amount_str}"
+    return hashlib.md5(mensaje.encode()).hexdigest()
 
 
 def generar_hmac(
@@ -67,6 +71,7 @@ def generar_hmac(
 ) -> str:
     """
     Función compatible con code.py - Generate HMAC for validation
+    FORMATO CORREGIDO: Con comas como separadores para compatibilidad inter-banco
 
     Args:
         account_number: Account number
@@ -79,8 +84,9 @@ def generar_hmac(
         HMAC in hexadecimal format
     """
     amount_str = "{:.2f}".format(float(amount))
-    mensaje = account_number + timestamp + transaction_id + amount_str
-    return hmac.new(clave.encode(), mensaje.encode(), hashlib.md5).hexdigest()
+    # CAMBIO CRÍTICO: Usar formato con comas como esperan otros bancos
+    mensaje = f"{clave},{account_number},{timestamp},{transaction_id},{amount_str}"
+    return hashlib.md5(mensaje.encode()).hexdigest()
 
 
 def verify_hmac(payload: dict, provided_hmac: str, clave: str = SECRET_KEY) -> bool:
