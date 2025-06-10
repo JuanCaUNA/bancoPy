@@ -12,38 +12,43 @@ import os
 import threading
 import time
 
+
 class WebGUI:
     def __init__(self):
         self.app = Flask(__name__)
-        self.app.secret_key = 'sinpe-banking-gui-2024'
+        self.app.secret_key = "sinpe-banking-gui-2024"
         self.api_url = "http://localhost:5000"
         self.server_process = None
         self.gui_port = 5001
-        
+
         self.setup_routes()
-        
+
     def setup_routes(self):
         """Configurar rutas de la aplicación web"""
-        
-        @self.app.route('/')
+
+        @self.app.route("/")
         def index():
-            return render_template('index.html')
-            
-        @self.app.route('/api/server/start', methods=['POST'])
+            return render_template("index.html")
+
+        @self.app.route("/api/server/start", methods=["POST"])
         def start_server():
             try:
                 if not self.server_process or self.server_process.poll() is not None:
-                    self.server_process = subprocess.Popen([
-                        sys.executable, "main.py"
-                    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    self.server_process = subprocess.Popen(
+                        [sys.executable, "main.py"],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                    )
                     time.sleep(2)
                     return jsonify({"success": True, "message": "Servidor iniciado"})
                 else:
-                    return jsonify({"success": False, "message": "Servidor ya ejecutándose"})
+                    return jsonify(
+                        {"success": False, "message": "Servidor ya ejecutándose"}
+                    )
             except Exception as e:
                 return jsonify({"success": False, "message": str(e)})
-                
-        @self.app.route('/api/server/status')
+
+        @self.app.route("/api/server/status")
         def server_status():
             try:
                 response = requests.get(f"{self.api_url}/health", timeout=2)
@@ -53,28 +58,28 @@ class WebGUI:
                     return jsonify({"online": False})
             except:
                 return jsonify({"online": False})
-                
-        @self.app.route('/api/proxy/<path:endpoint>')
+
+        @self.app.route("/api/proxy/<path:endpoint>")
         def api_proxy(endpoint):
             """Proxy para las llamadas a la API"""
             try:
                 url = f"{self.api_url}/api/{endpoint}"
-                if request.method == 'GET':
+                if request.method == "GET":
                     response = requests.get(url, params=request.args, timeout=10)
                 else:
                     response = requests.post(url, json=request.get_json(), timeout=10)
                 return response.json(), response.status_code
             except Exception as e:
                 return {"error": str(e)}, 500
-                
+
     def create_templates(self):
         """Crear templates HTML"""
         templates_dir = "templates"
         if not os.path.exists(templates_dir):
             os.makedirs(templates_dir)
-            
+
         # Template principal
-        html_content = '''<!DOCTYPE html>
+        html_content = """<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -601,11 +606,13 @@ class WebGUI:
         });
     </script>
 </body>
-</html>'''
-        
-        with open(os.path.join(templates_dir, 'index.html'), 'w', encoding='utf-8') as f:
+</html>"""
+
+        with open(
+            os.path.join(templates_dir, "index.html"), "w", encoding="utf-8"
+        ) as f:
             f.write(html_content)
-            
+
     def run(self):
         """Ejecutar la interfaz web"""
         self.create_templates()
@@ -613,13 +620,14 @@ class WebGUI:
         print("📋 Funcionalidades disponibles:")
         print("   - Gestión de usuarios")
         print("   - Gestión de cuentas")
-        print("   - Enlaces telefónicos") 
+        print("   - Enlaces telefónicos")
         print("   - Transferencias")
         print("   - Historial de transacciones")
         print("   - Control del servidor integrado")
         print("\n🚀 Abra su navegador en http://localhost:5001")
-        
-        self.app.run(host='localhost', port=self.gui_port, debug=False)
+
+        self.app.run(host="localhost", port=self.gui_port, debug=False)
+
 
 def main():
     """Función principal"""
@@ -630,6 +638,7 @@ def main():
         print("\n👋 Cerrando interfaz web...")
     except Exception as e:
         print(f"❌ Error al ejecutar interfaz web: {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo 17",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "C:/Program Files/Odoo 17.0.20241130/server/odoo-bin",
+            "args": [
+                "--config=C:/Program Files/Odoo 17.0.20241130/server/odoo.conf"
+            ],
+            "console": "internalConsole",
+            "cwd": "C:/Program Files/Odoo 17.0.20241130/server",
+            "justMyCode": true,
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        }
+    ]
+}

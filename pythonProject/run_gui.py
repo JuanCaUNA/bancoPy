@@ -12,6 +12,7 @@ sys.path.insert(0, current_dir)
 
 try:
     from gui import main
+
     main()
 except ImportError as e:
     print(f"Error al importar módulos: {e}")

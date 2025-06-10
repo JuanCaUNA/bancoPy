@@ -25,10 +25,7 @@ API_PORT = 5000
 API_DEBUG = False
 
 # CORS settings
-CORS_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-]
+CORS_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
 CORS_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 CORS_HEADERS = ["Content-Type", "Authorization"]
@@ -37,7 +34,7 @@ CORS_HEADERS = ["Content-Type", "Authorization"]
 EXTERNAL_BANKS = {
     "152": "http://192.168.1.10:3001",
     "CB": "http://192.168.2.10:3001",
-    "CR": "http://192.168.1.30:3001"
+    "CR": "http://192.168.1.30:3001",
 }
 
 # Logging settings
